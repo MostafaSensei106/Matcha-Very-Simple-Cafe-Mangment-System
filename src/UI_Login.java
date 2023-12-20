@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @author wwwmo
+ * @author Mostafa_Sensei106
  */
 public class UI_Login extends javax.swing.JFrame {
 
@@ -33,7 +33,7 @@ public class UI_Login extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         Login_btn = new javax.swing.JButton();
         ID_Login = new javax.swing.JTextField();
-        jPasswordField2 = new javax.swing.JPasswordField();
+        ID_Password = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(102, 181, 181));
@@ -69,7 +69,7 @@ public class UI_Login extends javax.swing.JFrame {
             }
         });
 
-        jPasswordField2.addActionListener(new java.awt.event.ActionListener() {
+        ID_Password.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jPasswordField2ActionPerformed(evt);
             }
@@ -87,7 +87,7 @@ public class UI_Login extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                                 .addGroup(Login_panalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(ID_Login, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
-                                        .addComponent(jPasswordField2))
+                                        .addComponent(ID_Password))
                                 .addGap(128, 128, 128))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Login_panalLayout.createSequentialGroup()
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -103,7 +103,7 @@ public class UI_Login extends javax.swing.JFrame {
                                         .addComponent(jLabel3))
                                 .addGap(7, 7, 7)
                                 .addGroup(Login_panalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jPasswordField2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(ID_Password, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
                                 .addGap(18, 18, 18)
                                 .addComponent(Login_btn)
@@ -134,11 +134,15 @@ public class UI_Login extends javax.swing.JFrame {
 
     private void Login_btnMouseClicked(java.awt.event.MouseEvent evt) {
         // TODO add your handling code here:
-        UI_Admin Admin_choose = new UI_Admin();
-        Admin_choose.show();
-        Admin_choose.setTitle("Matcha Cafe - Admin");
-        Admin_choose.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        dispose();
+        if (ID_Login.getText().trim().isEmpty() || ID_Password.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(Login_btn, "Do Not Let UserName or Password Empty");
+        } else {
+            UI_Admin Admin_choose = new UI_Admin();
+            Admin_choose.show();
+            Admin_choose.setTitle("Matcha Cafe - Admin");
+            Admin_choose.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            dispose();
+        }
     }
 
     private void Login_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Login_btnActionPerformed
@@ -186,6 +190,6 @@ public class UI_Login extends javax.swing.JFrame {
     public javax.swing.JPanel Login_panal;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JPasswordField jPasswordField2;
+    private javax.swing.JPasswordField ID_Password;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,7 +5,7 @@
 
 /**
  *
- * @author wwwmo
+ * @author Mostafa_Sensei106
  */
 public class UI_Admin extends javax.swing.JFrame {
 
@@ -126,6 +126,7 @@ public class UI_Admin extends javax.swing.JFrame {
         // TODO add your handling code here:
         UI_Login UI_Login = new UI_Login();
         UI_Login.show();
+        UI_Login.setTitle("Matcha Cafe - Login");
         dispose();
     }//GEN-LAST:event_btn_admin_backMouseClicked
 
