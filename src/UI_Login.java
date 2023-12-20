@@ -136,6 +136,8 @@ public class UI_Login extends javax.swing.JFrame {
         // TODO add your handling code here:
         UI_Admin Admin_choose = new UI_Admin();
         Admin_choose.show();
+        Admin_choose.setTitle("Matcha Cafe - Admin");
+        Admin_choose.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         dispose();
     }
 
