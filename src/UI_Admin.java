@@ -124,8 +124,8 @@ public class UI_Admin extends javax.swing.JFrame {
 
     private void btn_admin_backMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_admin_backMouseClicked
         // TODO add your handling code here:
-        UI_Login login_page = new UI_Login();
-        login_page.show();
+        UI_Login UI_Login = new UI_Login();
+        UI_Login.show();
         dispose();
     }//GEN-LAST:event_btn_admin_backMouseClicked
 
@@ -160,7 +160,6 @@ public class UI_Admin extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new UI_Admin().setVisible(true);
-
             }
         });
     }
