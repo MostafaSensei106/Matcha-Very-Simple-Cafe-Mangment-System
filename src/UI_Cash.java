@@ -15,7 +15,7 @@ import java.util.Vector;
 
 public class UI_Cash extends javax.swing.JFrame {
     /**
-     * @author Yasmeen, Mostafa Sensei106,
+     * @author Yasmeen, Mostafa Sensei106
      */
 
 
