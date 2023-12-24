@@ -5,6 +5,9 @@
 
 
 import javax.swing.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  *
@@ -18,6 +21,11 @@ public class UI_Employer extends javax.swing.JFrame {
     public UI_Employer() {
         initComponents();
          this.setLocationRelativeTo(this);
+         try {
+             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
+         }catch (SQLException e){
+             e.printStackTrace();
+         }
     }
 
     /**

@@ -5,9 +5,15 @@
 
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+
 /**
- *
  * @author Yasmeen
  */
 public class UI_Cash extends javax.swing.JFrame {
@@ -15,10 +21,154 @@ public class UI_Cash extends javax.swing.JFrame {
     /**
      * Creates new form cash2
      */
-    public UI_Cash() {
+    public UI_Cash(String E) {
+
         initComponents();
-         this.setLocationRelativeTo(this);
+        this.setLocationRelativeTo(this);
+        Pill_Box.setEditable(false);
+        sup_total.setEditable(false);
+        discount_cont.setEditable(false);
+        grand_total.setEditable(false);
+        sup_total.setText("0");
+        grand_total.setText("0");
+        discount_cont.setText("0");
+        discount_per.setText("0");
+        Emp_Name.setText(E);
+        // باخد الوقت والتاريخ الحالي
+        LocalDateTime now = LocalDateTime.now();
+
+
+// Define the desired format
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+// Format the current date and time
+        String formattedNow = now.format(formatter);
+
+// Set the text of the date label
+        Date_txt.setText(formattedNow);
+        Emp_Name.setText(E);
+        String asciiArt =
+                "*****************\n" +
+                "*   Matcha Cafe *\n" +
+                "*****************\n";
+
+        // Get the name of the employee
+        String employeeName = Emp_Name.getText();
+
+        // Concatenate the ASCII art, date, and employee name
+        String receiptHeader = asciiArt + "\nDate: " + formattedNow + "\nEmployee: " + employeeName + "\n-----------------------------\n";
+
+        // Add the receipt header to the beginning of the receipt
+        Pill_Box.setText(receiptHeader + Pill_Box.getText());
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
+            String sql = "SELECT * FROM m_items";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet resultSet = stmt.executeQuery();
+            DefaultTableModel model = new DefaultTableModel(new String[]{"Item ID", "Category", "Item Name", "Price", "Amount"}, 0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    // This causes all cells to be not editable
+                    return false;
+                }
+            };
+            // Iterate over the ResultSet and add each row to the model
+            while (resultSet.next()) {
+                int itemId = resultSet.getInt("items_id");
+                String category = resultSet.getString("items_category");
+                String itemName = resultSet.getString("items_name");
+                double price = resultSet.getDouble("items_prices");
+                int amount = resultSet.getInt("items_amount");
+//                double discount = resultSet.getDouble("items_discount");
+                model.addRow(new Object[]{itemId, category, itemName, price, amount});
+            }
+            // Set the model to the JTable
+            Casher_TP.setModel(model);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        discount_per.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateDiscountAndTotal();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateDiscountAndTotal();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateDiscountAndTotal();
+            }
+
+            private void updateDiscountAndTotal() {
+                double subtotal = Double.parseDouble(sup_total.getText());
+                double discountPercentage = 0;
+                if (!discount_per.getText().isEmpty()) {
+                    discountPercentage = Double.parseDouble(discount_per.getText()) / 100;
+                }
+                double discountAmount = subtotal * discountPercentage;
+                discount_cont.setText(String.valueOf(discountAmount));
+                double grandTotal = subtotal - discountAmount;
+                grand_total.setText(String.valueOf(grandTotal));
+            }
+        });
+        Search_I.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateTable();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateTable();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateTable();
+            }
+
+            private void updateTable() {
+                String searchText = Search_I.getText();
+                try {
+                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
+                    String sql = "SELECT * FROM m_items WHERE items_name LIKE ?";
+                    PreparedStatement stmt = con.prepareStatement(sql);
+                    stmt.setString(1, "%" + searchText + "%"); // Use % for wildcard search
+                    ResultSet resultSet = stmt.executeQuery();
+
+                    DefaultTableModel model = new DefaultTableModel(new String[]{"Item ID", "Category", "Item Name", "Price", "Amount", "Discount"}, 0) {
+                        @Override
+                        public boolean isCellEditable(int row, int column) {
+                            // This causes all cells to be not editable
+                            return false;
+                        }
+                    };
+
+                    // Iterate over the ResultSet and add each row to the model
+                    while (resultSet.next()) {
+                        int itemId = resultSet.getInt("items_id");
+                        String category = resultSet.getString("items_category");
+                        String itemName = resultSet.getString("items_name");
+                        double price = resultSet.getDouble("items_prices");
+                        int amount = resultSet.getInt("items_amount");
+                        double discount = resultSet.getDouble("items_discount");
+                        model.addRow(new Object[]{itemId, category, itemName, price, amount, discount});
+                    }
+
+                    // Set the model to the JTable
+                    Casher_TP.setModel(model);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
     }
+    // Assuming Search_I is your JTextField for search input
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -32,41 +182,41 @@ public class UI_Cash extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox<>();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        Casher_TP = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        fathe = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        sup_total = new javax.swing.JTextField();
+        discount_cont = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        grand_total = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        discount_per = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        undoButton = new javax.swing.JButton();
+        Add_Btn = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        Date_txt = new javax.swing.JLabel();
+        Emp_Name = new javax.swing.JLabel();
+        Cat_i = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
-        jTextField1 = new javax.swing.JTextField();
+        Qant = new javax.swing.JSpinner();
+        Search_I = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
+        Pill_Box = new javax.swing.JTextPane();
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cash");
 
-        jTable1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        Casher_TP.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        Casher_TP.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -80,17 +230,17 @@ public class UI_Cash extends javax.swing.JFrame {
                 "Item ID", "Item Name", "Category", "Price", "Quantity", "Date"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(Casher_TP);
 
-        fathe.addActionListener(new java.awt.event.ActionListener() {
+        sup_total.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fatheActionPerformed(evt);
+                sup_totalActionPerformed(evt);
             }
         });
 
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        discount_cont.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                discount_contActionPerformed(evt);
             }
         });
 
@@ -103,18 +253,18 @@ public class UI_Cash extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel6.setText("Discount");
 
-        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+        grand_total.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField4ActionPerformed(evt);
+                grand_totalActionPerformed(evt);
             }
         });
 
         jLabel8.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel8.setText("Grand Total");
 
-        jTextField5.addActionListener(new java.awt.event.ActionListener() {
+        discount_per.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField5ActionPerformed(evt);
+                discount_perActionPerformed(evt);
             }
         });
 
@@ -126,10 +276,10 @@ public class UI_Cash extends javax.swing.JFrame {
                 .addContainerGap(26, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fathe, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(grand_total, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(discount_cont, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sup_total, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(discount_per, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -141,43 +291,43 @@ public class UI_Cash extends javax.swing.JFrame {
                 .addGap(23, 23, 23)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fathe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(sup_total, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(discount_per, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(discount_cont, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(grand_total, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15))
         );
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel3.setText("Employer Name:");
 
-        jButton1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jButton1.setText(" Delete");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        undoButton.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        undoButton.setText("Un Do");
+        undoButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                undoButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jButton2.setText(" Add");
-        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+        Add_Btn.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        Add_Btn.setText(" Add");
+        Add_Btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton2MouseClicked(evt);
+                Add_BtnMouseClicked(evt);
             }
         });
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        Add_Btn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                Add_BtnActionPerformed(evt);
             }
         });
 
@@ -203,34 +353,39 @@ public class UI_Cash extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel5.setText(" Category: ");
 
-        jLabel7.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jLabel7.setText("date&time");
+        Date_txt.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        Date_txt.setText("date&time");
 
-        jLabel9.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel9.setText(" Jasmin");
+        Emp_Name.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        Emp_Name.setText(" Jasmin");
 
-        jComboBox2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tea", "Coffee", "Dessert" }));
-        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+        Cat_i.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        Cat_i.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tea", "Coffee", "Dessert" }));
+        Cat_i.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
+                Cat_iActionPerformed(evt);
+            }
+        });
+        Cat_i.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                Cat_iPropertyChange(evt);
             }
         });
 
         jLabel10.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel10.setText("Search Item:");
 
-        jLabel12.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        jLabel12.setFont(new java.awt.Font("Arial", 3, 12)); // NOI18N
         jLabel12.setText(" Quantity:");
 
-        jTextField1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        Search_I.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        Search_I.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                Search_IActionPerformed(evt);
             }
         });
 
-        jScrollPane2.setViewportView(jTextPane1);
+        jScrollPane2.setViewportView(Pill_Box);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -255,33 +410,33 @@ public class UI_Cash extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(Emp_Name, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel10)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(Search_I, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(62, 62, 62)
+                                .addGap(56, 56, 56)
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel7))
+                                .addComponent(Date_txt))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(Cat_i, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(Qant, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(undoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2)))
+                        .addComponent(Add_Btn)))
                 .addGap(23, 23, 23)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -289,7 +444,7 @@ public class UI_Cash extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -306,23 +461,23 @@ public class UI_Cash extends javax.swing.JFrame {
                         .addGap(11, 11, 11)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel7)
+                            .addComponent(Date_txt)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel9))
+                            .addComponent(Emp_Name))
                         .addGap(40, 40, 40)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Cat_i, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel10)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Search_I, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel12)
-                            .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(Qant, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 425, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(26, 26, 26)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton2)
-                            .addComponent(jButton1)
+                            .addComponent(Add_Btn)
+                            .addComponent(undoButton)
                             .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
@@ -345,30 +500,57 @@ public class UI_Cash extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void Add_BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Add_BtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_Add_BtnActionPerformed
 
-    private void fatheActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fatheActionPerformed
+    private void sup_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sup_totalActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_fatheActionPerformed
+    }//GEN-LAST:event_sup_totalActionPerformed
 
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+    private void grand_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_grand_totalActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
+    }//GEN-LAST:event_grand_totalActionPerformed
 
-    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+    private void discount_perActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discount_perActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5ActionPerformed
+    }//GEN-LAST:event_discount_perActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+    private void discount_contActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discount_contActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_discount_contActionPerformed
 
-    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+    private void Add_BtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Add_BtnMouseClicked
         // TODO add your handling code here:
-        
-    }//GEN-LAST:event_jButton2MouseClicked
+
+        int selectedRowIndex = Casher_TP.getSelectedRow();
+        int Qant_5 = (int) Qant.getValue();
+        // Check if a row is actually selected
+        if (selectedRowIndex != -1 && (int) Qant_5 > 0) {
+            // Get values of the selected row
+            Object itemId = Casher_TP.getValueAt(selectedRowIndex, 0);
+            Object category = Casher_TP.getValueAt(selectedRowIndex, 1);
+            Object itemName = Casher_TP.getValueAt(selectedRowIndex, 2);
+            Object price = Casher_TP.getValueAt(selectedRowIndex, 3);
+            int amount = (int) Casher_TP.getValueAt(selectedRowIndex, 4);
+            double subtotal = Double.parseDouble(sup_total.getText());
+            subtotal += (double)price * Qant_5;
+            sup_total.setText(String.valueOf(subtotal));
+            if (Qant_5 <= amount) {
+                amount -= Qant_5;
+                Casher_TP.setValueAt(amount, selectedRowIndex, 4);
+                String receipt = "Item ID: " + itemId + "\n" + "Item Name: " + itemName + "\n" + "Category: " + category + "\n" + "Price: " + price + "\n" + "Quantity: " + Qant_5 + "\n" +  "\n" + "-----------------------------\n";
+                Pill_Box.setText(Pill_Box.getText() + receipt);
+            } else {
+                JOptionPane.showMessageDialog(null, "The quantity is greater than the amount of items available.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            double discountPercentage = Double.parseDouble(discount_per.getText()) / 100;
+            double discountAmount = subtotal * discountPercentage;
+            discount_cont.setText(String.valueOf(discountAmount));
+            double grandTotal = subtotal - discountAmount;
+            grand_total.setText(String.valueOf(grandTotal));
+        }
+    }//GEN-LAST:event_Add_BtnMouseClicked
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
         // TODO add your handling code here:
@@ -379,17 +561,64 @@ public class UI_Cash extends javax.swing.JFrame {
         Login_Back.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }//GEN-LAST:event_jButton4MouseClicked
 
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+    private void Cat_iActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Cat_iActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox2ActionPerformed
+        String category = (String) Cat_i.getSelectedItem();
+        String searchText = (String) Search_I.getText();
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
+            String sql;
+            PreparedStatement stmt;
+            if (searchText.isEmpty()) {
+                sql = "SELECT * FROM m_items WHERE items_category = ?";
+                stmt = con.prepareStatement(sql);
+                stmt.setString(1, category);
+            } else {
+                sql = "SELECT * FROM m_items WHERE items_category = ? AND items_name LIKE ?";
+                stmt = con.prepareStatement(sql);
+                stmt.setString(1, category);
+                stmt.setString(2, "%" + searchText + "%");
+            }
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+            ResultSet resultSet = stmt.executeQuery();
+            DefaultTableModel model = new DefaultTableModel(new String[]{"Item ID", "Category", "Item Name", "Price", "Amount", "Discount"}, 0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    // This causes all cells to be not editable
+                    return false;
+                }
+            };
+
+            // Iterate over the ResultSet and add each row to the model
+            while (resultSet.next()) {
+                int itemId = resultSet.getInt("items_id");
+                String categories = resultSet.getString("items_category");
+                String itemName = resultSet.getString("items_name");
+                double price = resultSet.getDouble("items_prices");
+                int amount = resultSet.getInt("items_amount");
+                double discount = resultSet.getDouble("items_discount");
+                model.addRow(new Object[]{itemId, categories, itemName, price, amount, discount});
+            }
+
+            // Set the model to the JTable
+            Casher_TP.setModel(model);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_Cat_iActionPerformed
+
+    private void Search_IActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Search_IActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_Search_IActionPerformed
+
+    private void undoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_undoButtonActionPerformed
+
+    private void Cat_iPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_Cat_iPropertyChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Cat_iPropertyChange
 
     /**
      * @param args the command line arguments
@@ -398,7 +627,7 @@ public class UI_Cash extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -421,19 +650,26 @@ public class UI_Cash extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new UI_Cash().setVisible(true);
+//                new UI_Cash().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField fathe;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton Add_Btn;
+    private javax.swing.JTable Casher_TP;
+    private javax.swing.JComboBox<String> Cat_i;
+    private javax.swing.JLabel Date_txt;
+    private javax.swing.JLabel Emp_Name;
+    private javax.swing.JTextPane Pill_Box;
+    private javax.swing.JSpinner Qant;
+    private javax.swing.JTextField Search_I;
+    private javax.swing.JTextField discount_cont;
+    private javax.swing.JTextField discount_per;
+    private javax.swing.JTextField grand_total;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
@@ -442,20 +678,13 @@ public class UI_Cash extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JTextField sup_total;
+    private javax.swing.JButton undoButton;
     // End of variables declaration//GEN-END:variables
 }
