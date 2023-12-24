@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
+import javax.swing.*;
+
 /**
  *
  * @author Mostafa_Sensei106
@@ -29,7 +31,7 @@ public class UI_Admin extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         Admin_choose_panal = new javax.swing.JPanel();
         btn_admin_back = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        Btn_Emp_Mange = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -44,7 +46,6 @@ public class UI_Admin extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(254, 223, 205));
 
-        Admin_choose_panal.setBackground(new java.awt.Color(254, 223, 205));
         Admin_choose_panal.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
         btn_admin_back.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -60,11 +61,16 @@ public class UI_Admin extends javax.swing.JFrame {
             }
         });
 
-        jButton5.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jButton5.setText("Employer’s Management's");
+        Btn_Emp_Mange.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        Btn_Emp_Mange.setText("Employer’s Management's");
+        Btn_Emp_Mange.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Btn_Emp_MangeMouseClicked(evt);
+            }
+        });
 
         jButton6.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jButton6.setText("item Management");
+        jButton6.setText("Item Management");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
@@ -80,28 +86,29 @@ public class UI_Admin extends javax.swing.JFrame {
             Admin_choose_panalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(Admin_choose_panalLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                .addComponent(jButton6)
+                .addComponent(Btn_Emp_Mange)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Admin_choose_panalLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btn_admin_back)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(Admin_choose_panalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(Admin_choose_panalLayout.createSequentialGroup()
+                        .addComponent(jButton6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(Admin_choose_panalLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(btn_admin_back)))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
         Admin_choose_panalLayout.setVerticalGroup(
             Admin_choose_panalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(Admin_choose_panalLayout.createSequentialGroup()
                 .addGap(92, 92, 92)
                 .addGroup(Admin_choose_panalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Btn_Emp_Mange, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_admin_back)
-                .addContainerGap(74, Short.MAX_VALUE))
+                .addContainerGap(97, Short.MAX_VALUE))
         );
 
         jLabel2.setBackground(new java.awt.Color(254, 223, 205));
@@ -147,6 +154,15 @@ public class UI_Admin extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_admin_backActionPerformed
 
+    private void Btn_Emp_MangeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Btn_Emp_MangeMouseClicked
+        // TODO add your handling code here:
+        UI_Employer To_Employer = new UI_Employer();
+        To_Employer.show();
+        To_Employer.setTitle("Matcha - Employer");
+        To_Employer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        dispose();
+    }//GEN-LAST:event_Btn_Emp_MangeMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -184,10 +200,10 @@ public class UI_Admin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static javax.swing.JPanel Admin_choose_panal;
+    private javax.swing.JButton Btn_Emp_Mange;
     private javax.swing.JButton btn_admin_back;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables

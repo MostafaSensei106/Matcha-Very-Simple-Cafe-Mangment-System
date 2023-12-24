@@ -10,6 +10,7 @@ public class Main {
         login_page.setVisible(true);
         login_page.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+    
     public static void main(String[] args) {
         login_page();
     }
