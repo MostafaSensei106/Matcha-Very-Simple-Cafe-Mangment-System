@@ -2,8 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -17,19 +15,24 @@ import java.util.Vector;
 
 public class UI_Cash extends javax.swing.JFrame {
     /**
-     * @author Yasmeen
+     * @author Yasmeen, Mostafa Sensei106,
      */
+
+
+    //كلاس يعمل حفظ للجدول و الفاتورة و المجموع السابق sub totoal
     public static class Action {
+        //جدول
         DefaultTableModel model;
         String receipt;
         double subtotal;
 
-        public Action(DefaultTableModel model, String receipt, double subtotal) {
+        public Action(DefaultTableModel model, String receipt, double subtotal) { // set fun
             this.model = model;
             this.receipt = receipt;
             this.subtotal = subtotal;
         }
 
+        //get fun
         public DefaultTableModel getModel() {
             return model;
         }
@@ -43,37 +46,51 @@ public class UI_Cash extends javax.swing.JFrame {
         }
     }
 
+    //ستاك عام في الكلاس كله
     Stack<Action> actions = new Stack<>();
 
     /**
      * Creates new form cash2
      */
+
+    //كونستراكتور
     public UI_Cash(String E) {
         initComponents();
         this.setLocationRelativeTo(this);
-        Pill_Box.setEditable(false);
-        sup_total.setEditable(false);
-        discount_cont.setEditable(false);
-        grand_total.setEditable(false);
-        sup_total.setText("0");
+        //قيم افتراضية
+        Pill_Box.setEditable(false); // قفل التعديل في الفاتورة
+
+        sup_total.setEditable(false); // قفل التعيدل في المجموع
+
+        discount_cont.setEditable(false);// قفل التعديل علي عداد الخصم
+
+        grand_total.setEditable(false);/// قفل التعدل علي عداد  المجمع الكامل
+
+        // قمي افتراضية
+        sup_total.setText("0");// قيمة افتارضية للمجموع
+
         grand_total.setText("0");
+
         discount_cont.setText("0");
+
         discount_per.setText("0");
+
         Emp_Name.setText(E);
 
-        // باخد الوقت والتاريخ الحالي
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();         // باخد الوقت والتاريخ الحالي
 
 
-// Define the desired format
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"); // تجديد شكل التايخ للعرض
 
-// Format the current date and time
         String formattedNow = now.format(formatter);
 
-// Set the text of the date label
+        //اضفاة الساعة
         Date_txt.setText(formattedNow);
+
+        //اضافة الاسم من كلاس تسجيل الدخول
         Emp_Name.setText(E);
+
+        //الفاتورة الافضتراضية
         String asciiArt =
                 "*****************\n" +
                         "* Matcha Cafe *\n" +
@@ -87,6 +104,7 @@ public class UI_Cash extends javax.swing.JFrame {
 
         // Add the receipt header to the beginning of the receipt
         Pill_Box.setText(receiptHeader + Pill_Box.getText());
+
         try {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
             String sql = "SELECT * FROM m_items";
@@ -99,6 +117,7 @@ public class UI_Cash extends javax.swing.JFrame {
                     return false;
                 }
             };
+
             // Iterate over the ResultSet and add each row to the model
             while (resultSet.next()) {
                 int itemId = resultSet.getInt("items_id");
@@ -113,6 +132,8 @@ public class UI_Cash extends javax.swing.JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        // لو اتغيرت نسبة الخصم تعديل مباشر
         discount_per.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -132,16 +153,24 @@ public class UI_Cash extends javax.swing.JFrame {
             private void updateDiscountAndTotal() {
                 double subtotal = Double.parseDouble(sup_total.getText());
                 double discountPercentage = 0;
-                if (!discount_per.getText().isEmpty()) {
+
+                if (!discount_per.getText().isEmpty() && discountPercentage < 100  && discountPercentage > 0) {
                     //تغير الاسترينج
                     discountPercentage = Double.parseDouble(discount_per.getText()) / 100;
                 }
+
                 double discountAmount = subtotal * discountPercentage;
+
                 discount_cont.setText(String.valueOf(discountAmount));
+
                 double grandTotal = subtotal - discountAmount;
+
                 grand_total.setText(String.valueOf(grandTotal));
+
             }
         });
+
+        // كود البحث
         Search_I.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -167,9 +196,10 @@ public class UI_Cash extends javax.swing.JFrame {
                     stmt.setString(1, "%" + searchText + "%"); // Use % for wildcard search
                     ResultSet resultSet = stmt.executeQuery();
 
-                    DefaultTableModel model = new DefaultTableModel(new String[]{"Item ID", "Category", "Item Name", "Price", "Amount", "Discount"}, 0) {
+                    DefaultTableModel model = new DefaultTableModel(new String[]{"Item ID", "Category", "Item Name", "Price", "Amount"}, 0) {
+
                         @Override
-                        public boolean isCellEditable(int row, int column) {
+                        public boolean isCellEditable(int row, int column) { // غير قابلة للتعديل
                             // This causes all cells to be not editable
                             return false;
                         }
@@ -182,8 +212,7 @@ public class UI_Cash extends javax.swing.JFrame {
                         String itemName = resultSet.getString("items_name");
                         double price = resultSet.getDouble("items_prices");
                         int amount = resultSet.getInt("items_amount");
-                        double discount = resultSet.getDouble("items_discount");
-                        model.addRow(new Object[]{itemId, category, itemName, price, amount, discount});
+                        model.addRow(new Object[]{itemId, category, itemName, price, amount});
                     }
 
                     // Set the model to the JTable
@@ -529,15 +558,22 @@ public class UI_Cash extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+
     private void recalculateTotals() {
         if (!actions.isEmpty()) {
-            Action lastAction = actions.peek();
-            double lastSubtotal = lastAction.getSubtotal();
+            Action lastAction = actions.peek();// اخر شيء عملية اضافة
+
+            double lastSubtotal = lastAction.getSubtotal();// حساب  المجموع
+
             double discountPercentage = Double.parseDouble(discount_per.getText()) / 100;
+
             double discountAmount = lastSubtotal * discountPercentage;
-            discount_cont.setText(String.valueOf(discountAmount));
+
+            discount_cont.setText(String.valueOf(discountAmount));// برجع القيمة الي نص  مره اخري
+
             double grandTotal = lastSubtotal - discountAmount;
-            grand_total.setText(String.valueOf(grandTotal));
+
+            grand_total.setText(String.valueOf(grandTotal));//برجع القيمة الي نص  مره اخري
         }
     }
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -564,46 +600,73 @@ public class UI_Cash extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_discount_contActionPerformed
 
+    // كود اضافة عملية جدية
     private void Add_BtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Add_BtnMouseClicked
         // TODO add your handling code here:
-        double subtotalBeforeAdding = Double.parseDouble(sup_total.getText());
-        DefaultTableModel originalModel = (DefaultTableModel) Casher_TP.getModel();
-        Vector data = new Vector();
-        for (int i = 0; i < originalModel.getRowCount(); i++) {
+        double subtotalBeforeAdding = Double.parseDouble(sup_total.getText()); // حفظ المجموع قبل الاضفاة للعودة له مره اخري
+
+        DefaultTableModel originalModel = (DefaultTableModel) Casher_TP.getModel(); // حفظ الجدول
+
+        Vector data = new Vector();// ما هي الفيكتورز
+        //وسيلة لحفظ البيانات جاجه شبه المصفوفة
+        // المصفوفة محدودخ الحجم او متغير بحجم معين ال فيكوتر نفس وظيفة المصفوفه و مع كل عنصر حجمة يزيد
+        // فرضا عملنا فيكنتور 10 لو تم اضافة عنصر يتحول الحجم الي 11 وهكذا
+
+        // بخزن الجدول كله صف في الفيكتور
+        for (int i = 0; i < originalModel.getRowCount(); i++) {  // بحزن جيمع الصفوف في الجدول
             data.add((Vector) originalModel.getDataVector().get(i).clone());
         }
-        Vector columnIdentifiers = new Vector();
+
+        Vector columnIdentifiers = new Vector(); // بخزن جميع الاعمدة في الجدول
         for (int i = 0; i < originalModel.getColumnCount(); i++) {
             columnIdentifiers.add(originalModel.getColumnName(i));
         }
-        DefaultTableModel modelBeforeAdding = new DefaultTableModel(data, columnIdentifiers);
-        Action actionBeforeAdding = new Action(modelBeforeAdding, Pill_Box.getText(), subtotalBeforeAdding);
-        actions.push(actionBeforeAdding);
-        int selectedRowIndex = Casher_TP.getSelectedRow();
-        int Qant_5 = (int) Qant.getValue();
-        // Check if a row is actually selected
+
+        DefaultTableModel modelBeforeAdding = new DefaultTableModel(data, columnIdentifiers);// بعمل بيها جدول جديد قبل الاضافة
+
+        Action actionBeforeAdding = new Action(modelBeforeAdding, Pill_Box.getText(), subtotalBeforeAdding); // عملنا ابوجيت من كلاس الاستاك وبعمل سيف لل جدول و الفاتورة و المجموع
+
+        actions.push(actionBeforeAdding);// جطينا لابوجيكت جوا الاستاك
+
+        int selectedRowIndex = Casher_TP.getSelectedRow(); // بيضيف الصف المختار الي الفاتورة
+
+        int Qant_5 = (int) Qant.getValue();// بيحسب الكمية المراد شراء ها
+
+        // لو مش مختار اي حاجة يختار الصف رقم -1
         if (selectedRowIndex != -1 && (int) Qant_5 > 0) {
-            // Get values of the selected row
+
+            // بسحب البيانات من الصفوف المختارة
             Object itemId = Casher_TP.getValueAt(selectedRowIndex, 0);
             Object category = Casher_TP.getValueAt(selectedRowIndex, 1);
             Object itemName = Casher_TP.getValueAt(selectedRowIndex, 2);
             Object price = Casher_TP.getValueAt(selectedRowIndex, 3);
             int amount = (int) Casher_TP.getValueAt(selectedRowIndex, 4);
-            double subtotal = Double.parseDouble(sup_total.getText());
-            subtotal += (double) price * Qant_5;
-            sup_total.setText(String.valueOf(subtotal));
+
             if (Qant_5 <= amount) {
-                amount -= Qant_5;
+                amount -= Qant_5; // هسحب من المخزون
                 Casher_TP.setValueAt(amount, selectedRowIndex, 4);
                 String receipt = "Item ID: " + itemId + "\n" + "Item Name: " + itemName + "\n" + "Category: " + category + "\n" + "Price: " + price + "\n" + "Quantity: " + Qant_5 + "\n" + "\n" + "-----------------------------\n";
                 Pill_Box.setText(Pill_Box.getText() + receipt);
-            } else {
-                JOptionPane.showMessageDialog(null, "The quantity is greater than the amount of items available.", "Error", JOptionPane.ERROR_MESSAGE);
             }
+            else {
+                JOptionPane.showMessageDialog(null, "The quantity is greater than the amount of items available.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            double subtotal = Double.parseDouble(sup_total.getText());
+
+            subtotal += (double) price * Qant_5;
+
+            sup_total.setText(String.valueOf(subtotal));
+
             double discountPercentage = Double.parseDouble(discount_per.getText()) / 100;
+
             double discountAmount = subtotal * discountPercentage;
+
             discount_cont.setText(String.valueOf(discountAmount));
+
             double grandTotal = subtotal - discountAmount;
+
             grand_total.setText(String.valueOf(grandTotal));
         }
     }//GEN-LAST:event_Add_BtnMouseClicked
@@ -619,8 +682,10 @@ public class UI_Cash extends javax.swing.JFrame {
 
     private void Cat_iActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Cat_iActionPerformed
         // TODO add your handling code here:
+
         String category = (String) Cat_i.getSelectedItem();
-        String searchText = (String) Search_I.getText();
+
+        String searchText = (String) Search_I.getText(); // هي في كلام جو خانة البحث
 
         try {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
@@ -630,7 +695,8 @@ public class UI_Cash extends javax.swing.JFrame {
                 sql = "SELECT * FROM m_items WHERE items_category = ?";
                 stmt = con.prepareStatement(sql);
                 stmt.setString(1, category);
-            } else {
+            }
+            else {
                 sql = "SELECT * FROM m_items WHERE items_category = ? AND items_name LIKE ?";
                 stmt = con.prepareStatement(sql);
                 stmt.setString(1, category);
@@ -638,7 +704,7 @@ public class UI_Cash extends javax.swing.JFrame {
             }
 
             ResultSet resultSet = stmt.executeQuery();
-            DefaultTableModel model = new DefaultTableModel(new String[]{"Item ID", "Category", "Item Name", "Price", "Amount", "Discount"}, 0) {
+            DefaultTableModel model = new DefaultTableModel(new String[]{"Item ID", "Category", "Item Name", "Price", "Amount"}, 0) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
                     // This causes all cells to be not editable
@@ -677,12 +743,18 @@ public class UI_Cash extends javax.swing.JFrame {
     }//GEN-LAST:event_Cat_iPropertyChange
 
     private void undoButtonMouseClicked(java.awt.event.MouseEvent evt) {
+        // لو الاستاك بتاعي مليان
         if (!actions.isEmpty()) {
-            Action lastAction = actions.pop();
-            Casher_TP.setModel(lastAction.getModel());
-            Pill_Box.setText(lastAction.getReceipt());
-            sup_total.setText(String.valueOf(lastAction.getSubtotal()));
-            recalculateTotals();
+
+            Action lastAction = actions.pop(); // برجع اخر  تعيدل جواه
+
+            Casher_TP.setModel(lastAction.getModel());// برجع الجدول الي جفظتة
+
+            Pill_Box.setText(lastAction.getReceipt()); // برجع الرسيت
+
+            sup_total.setText(String.valueOf(lastAction.getSubtotal())); // برجع السبتوتال
+
+            recalculateTotals();// بترسيت الجدول من اول وجديد
         }
     }//GEN-LAST:event_undoButtonMouseClicked
 
@@ -716,7 +788,7 @@ public class UI_Cash extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-//                new UI_Cash().setVisible(true);
+          //     new UI_Cash().setVisible(true);
             }
         });
     }
