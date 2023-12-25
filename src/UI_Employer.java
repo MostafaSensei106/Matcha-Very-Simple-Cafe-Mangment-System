@@ -3,10 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 
-
+import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -20,12 +22,37 @@ public class UI_Employer extends javax.swing.JFrame {
      */
     public UI_Employer() {
         initComponents();
-         this.setLocationRelativeTo(this);
-         try {
-             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
-         }catch (SQLException e){
-             e.printStackTrace();
-         }
+        this.setLocationRelativeTo(this);
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
+            String sql = "SELECT * FROM m_matcha";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet resultSet = stmt.executeQuery();
+            DefaultTableModel model = new DefaultTableModel(new String[]{"ID ", "Password ", "Position ", "First Name", "Last Name","Gender","Salary","Phone Number"}, 0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    // This causes all cells to be not editable
+                    return false;
+                }
+            };
+
+            // Iterate over the ResultSet and add each row to the model
+            while (resultSet.next()) {
+                 int  id = resultSet.getInt("ID");
+                 int password = resultSet.getInt("Password");
+                String position = resultSet.getString("Position");
+                String FirstName = resultSet.getString("First Name");
+                String LastName = resultSet.getString("Last Name");
+                String Gender = resultSet.getString("Gender");
+                int Salary = resultSet.getInt("Salary");
+                double  PhoneNumber  = resultSet.getDouble("Phone Number");
+                model.addRow(new Object[]{id, password , position , FirstName , LastName, Gender,Salary, PhoneNumber});
+            }
+            // Set the model to the JTable
+            jTable1.setModel(model);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
