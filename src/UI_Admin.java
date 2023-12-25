@@ -71,6 +71,11 @@ public class UI_Admin extends javax.swing.JFrame {
 
         jButton6.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jButton6.setText("Item Management");
+        jButton6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton6MouseClicked(evt);
+            }
+        });
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
@@ -162,6 +167,15 @@ public class UI_Admin extends javax.swing.JFrame {
         To_Employer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         dispose();
     }//GEN-LAST:event_Btn_Emp_MangeMouseClicked
+
+    private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseClicked
+        // TODO add your handling code here:
+        UI_Items To_Items = new UI_Items();
+        To_Items.show();
+        To_Items.setTitle("Matcha - Employer Mange");
+        To_Items.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        dispose();
+    }//GEN-LAST:event_jButton6MouseClicked
 
     /**
      * @param args the command line arguments

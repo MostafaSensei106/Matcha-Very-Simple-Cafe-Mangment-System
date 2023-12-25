@@ -5,10 +5,11 @@
 
 
 import javax.swing.*;
-
+import javax.swing.table.DefaultTableModel; //  هام جداا
+import java.sql.*;
 /**
  *
- * @author DELL
+ * @author Sara
  */
 public class UI_Items extends javax.swing.JFrame {
 
@@ -18,6 +19,34 @@ public class UI_Items extends javax.swing.JFrame {
         public UI_Items() {
         initComponents();
          this.setLocationRelativeTo(this);
+            try {
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
+                String sql = "SELECT * FROM m_items";
+                PreparedStatement stmt = con.prepareStatement(sql);
+                ResultSet resultSet = stmt.executeQuery();
+                DefaultTableModel model = new DefaultTableModel(new String[]{"Item ID", "Category", "Item Name", "Price", "Amount"}, 0) {
+                    @Override
+                    public boolean isCellEditable(int row, int column) {
+                        // This causes all cells to be not editable
+                        return false;
+                    }
+                };
+
+                // Iterate over the ResultSet and add each row to the model
+                while (resultSet.next()) {
+                    int itemId = resultSet.getInt("items_id");
+                    String category = resultSet.getString("items_category");
+                    String itemName = resultSet.getString("items_name");
+                    double price = resultSet.getDouble("items_prices");
+                    int amount = resultSet.getInt("items_amount");
+                    model.addRow(new Object[]{itemId, category, itemName, price, amount});
+                }
+                // Set the model to the JTable
+                Items_TP.setModel(model);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
     }
 
     /**
@@ -31,7 +60,7 @@ public class UI_Items extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        Items_TP = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         text_id = new javax.swing.JTextField();
         text_name = new javax.swing.JTextField();
@@ -52,8 +81,8 @@ public class UI_Items extends javax.swing.JFrame {
 
         jPanel1.setName(""); // NOI18N
 
-        jTable1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        Items_TP.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        Items_TP.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -64,7 +93,7 @@ public class UI_Items extends javax.swing.JFrame {
                 "ID", "Category", "Name", "Prices", "Amount"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(Items_TP);
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel1.setText(" ItemID :");
@@ -299,6 +328,7 @@ public class UI_Items extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable Items_TP;
     private javax.swing.JButton btn_add;
     private javax.swing.JButton btn_del;
     private javax.swing.JButton btn_edit;
@@ -311,7 +341,6 @@ public class UI_Items extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField text_id;
     private javax.swing.JTextField text_name;
     private javax.swing.JTextField text_phone;
