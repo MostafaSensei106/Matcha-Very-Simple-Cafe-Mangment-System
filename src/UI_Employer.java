@@ -24,7 +24,7 @@ public class UI_Employer extends javax.swing.JFrame {
             String sql = "SELECT * FROM m_matcha";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet resultSet = stmt.executeQuery();
-            DefaultTableModel model = new DefaultTableModel(new String[]{"ID ", "Password ", "Position ", "First Name", "Gender", "Salary", "Phone"}, 0) {
+            DefaultTableModel model = new DefaultTableModel(new String[]{"ID ", "Password ", "Position ", "Name", "Gender", "Salary", "Phone"}, 0) {
 
 
                 @Override
@@ -34,7 +34,6 @@ public class UI_Employer extends javax.swing.JFrame {
                 }
             };
 
-            // Iterate over the ResultSet and add each row to the model
             while (resultSet.next()) {
                 int id = resultSet.getInt("ID");
                 int password = resultSet.getInt("Password");
