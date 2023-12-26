@@ -32,8 +32,7 @@ public class UI_Admin extends javax.swing.JFrame {
         Admin_choose_panal = new javax.swing.JPanel();
         btn_admin_back = new javax.swing.JButton();
         Btn_Emp_Mange = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        To_Items_Manag = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         jButton3.setText("jButton3");
@@ -69,51 +68,45 @@ public class UI_Admin extends javax.swing.JFrame {
             }
         });
 
-        jButton6.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jButton6.setText("Item Management");
-        jButton6.addMouseListener(new java.awt.event.MouseAdapter() {
+        To_Items_Manag.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        To_Items_Manag.setText("Item Management");
+        To_Items_Manag.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton6MouseClicked(evt);
+                To_Items_ManagMouseClicked(evt);
             }
         });
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        To_Items_Manag.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                To_Items_ManagActionPerformed(evt);
             }
         });
-
-        jButton4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jButton4.setText("Pills");
 
         javax.swing.GroupLayout Admin_choose_panalLayout = new javax.swing.GroupLayout(Admin_choose_panal);
         Admin_choose_panal.setLayout(Admin_choose_panalLayout);
         Admin_choose_panalLayout.setHorizontalGroup(
             Admin_choose_panalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(Admin_choose_panalLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Btn_Emp_Mange)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap()
                 .addGroup(Admin_choose_panalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(Admin_choose_panalLayout.createSequentialGroup()
-                        .addComponent(jButton6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(Admin_choose_panalLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(btn_admin_back)))
-                .addContainerGap(10, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(Btn_Emp_Mange)
+                        .addGap(76, 76, 76)
+                        .addComponent(To_Items_Manag)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(btn_admin_back, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         Admin_choose_panalLayout.setVerticalGroup(
             Admin_choose_panalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(Admin_choose_panalLayout.createSequentialGroup()
                 .addGap(92, 92, 92)
-                .addGroup(Admin_choose_panalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Btn_Emp_Mange, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn_admin_back)
-                .addContainerGap(97, Short.MAX_VALUE))
+                .addGroup(Admin_choose_panalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(To_Items_Manag, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Btn_Emp_Mange, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
+                .addComponent(btn_admin_back, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jLabel2.setBackground(new java.awt.Color(254, 223, 205));
@@ -143,9 +136,9 @@ public class UI_Admin extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void To_Items_ManagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_To_Items_ManagActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_To_Items_ManagActionPerformed
 
     private void btn_admin_backMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_admin_backMouseClicked
         // TODO add your handling code here:
@@ -168,14 +161,14 @@ public class UI_Admin extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_Btn_Emp_MangeMouseClicked
 
-    private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseClicked
+    private void To_Items_ManagMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_To_Items_ManagMouseClicked
         // TODO add your handling code here:
         UI_Items To_Items = new UI_Items();
         To_Items.show();
-        To_Items.setTitle("Matcha - Employer Mange");
+        To_Items.setTitle("Matcha - Item Mangements");
         To_Items.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         dispose();
-    }//GEN-LAST:event_jButton6MouseClicked
+    }//GEN-LAST:event_To_Items_ManagMouseClicked
 
     /**
      * @param args the command line arguments
@@ -215,10 +208,9 @@ public class UI_Admin extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static javax.swing.JPanel Admin_choose_panal;
     private javax.swing.JButton Btn_Emp_Mange;
+    private javax.swing.JButton To_Items_Manag;
     private javax.swing.JButton btn_admin_back;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 }

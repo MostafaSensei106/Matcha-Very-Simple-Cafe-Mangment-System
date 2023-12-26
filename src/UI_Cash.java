@@ -94,7 +94,7 @@ public class UI_Cash extends javax.swing.JFrame {
         String asciiArt =
                         "*****************\n" +
                         "* Matcha Cafe *\n" +
-                        "*****************\n";
+                        "*****************";
 
         // Get the name of the employee
         String employeeName = Emp_Name.getText();
@@ -205,7 +205,6 @@ public class UI_Cash extends javax.swing.JFrame {
                         }
                     };
 
-                    // Iterate over the ResultSet and add each row to the model
                     while (resultSet.next()) {
                         int itemId = resultSet.getInt("items_id");
                         String category = resultSet.getString("items_category");
@@ -215,7 +214,6 @@ public class UI_Cash extends javax.swing.JFrame {
                         model.addRow(new Object[]{itemId, category, itemName, price, amount});
                     }
 
-                    // Set the model to the JTable
                     Casher_TP.setModel(model);
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -225,7 +223,6 @@ public class UI_Cash extends javax.swing.JFrame {
         });
     }
 
-    // Assuming Search_I is your JTextField for search input
 
     /**
      * This method is called from within the constructor to initialize the form.

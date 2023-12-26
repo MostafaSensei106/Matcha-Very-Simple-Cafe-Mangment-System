@@ -14,7 +14,8 @@ import java.sql.*;
 public class UI_Items extends javax.swing.JFrame {
 
     /**
-     * Creates new form emp
+     * 
+     * 
      */
         public UI_Items() {
         initComponents();
@@ -73,7 +74,7 @@ public class UI_Items extends javax.swing.JFrame {
         btn_add = new javax.swing.JButton();
         btn_edit = new javax.swing.JButton();
         btn_del = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        Back_To_Admin = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -117,7 +118,7 @@ public class UI_Items extends javax.swing.JFrame {
         jLabel6.setText("Amount : ");
 
         btn_add.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btn_add.setText("Add Employer");
+        btn_add.setText("Add ");
         btn_add.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_addActionPerformed(evt);
@@ -125,7 +126,7 @@ public class UI_Items extends javax.swing.JFrame {
         });
 
         btn_edit.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btn_edit.setText("Edit Employer");
+        btn_edit.setText("Edit ");
         btn_edit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_editActionPerformed(evt);
@@ -133,23 +134,18 @@ public class UI_Items extends javax.swing.JFrame {
         });
 
         btn_del.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btn_del.setText("Delet Employer");
+        btn_del.setText("Delet ");
         btn_del.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_delActionPerformed(evt);
             }
         });
 
-        jButton1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jButton1.setText("Back");
-        jButton1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                jButton1MouseDragged(evt);
-            }
-        });
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        Back_To_Admin.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        Back_To_Admin.setText("Back");
+        Back_To_Admin.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Back_To_AdminMouseClicked(evt);
             }
         });
 
@@ -167,7 +163,7 @@ public class UI_Items extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 821, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Back_To_Admin, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(39, 39, 39)
@@ -199,10 +195,10 @@ public class UI_Items extends javax.swing.JFrame {
                     .addComponent(text_phone, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
                     .addComponent(text_salary))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btn_edit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_add, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_del, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btn_edit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
+                    .addComponent(btn_add, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
+                    .addComponent(btn_del, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(66, 66, 66))
         );
         jPanel1Layout.setVerticalGroup(
@@ -236,7 +232,7 @@ public class UI_Items extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btn_del)))
                 .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Back_To_Admin, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -260,26 +256,9 @@ public class UI_Items extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_delActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        UI_Admin Admin_Back = new UI_Admin();
-        Admin_Back.show();
-        Admin_Back.setTitle("Matcha Cafe - Admin");
-        dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void btn_editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_editActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_editActionPerformed
-
-    private void jButton1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseDragged
-        // TODO add your handling code here:
-        UI_Admin Back_Admin = new UI_Admin();
-        Back_Admin.show();
-        dispose();
-        Back_Admin.setTitle("Matcha Cafe - Admin");
-        Back_Admin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }//GEN-LAST:event_jButton1MouseDragged
 
     private void btn_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
         // TODO add your handling code here:
@@ -288,6 +267,15 @@ public class UI_Items extends javax.swing.JFrame {
     private void text_salaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_text_salaryActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_text_salaryActionPerformed
+
+    private void Back_To_AdminMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Back_To_AdminMouseClicked
+        // TODO add your handling code here:
+        UI_Admin Admin_back = new UI_Admin();
+        Admin_back.show();
+        Admin_back.setTitle("Matcha Cafe - Admin");
+        Admin_back.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        dispose();
+    }//GEN-LAST:event_Back_To_AdminMouseClicked
 
     /**
      * @param args the command line arguments
@@ -306,11 +294,11 @@ public class UI_Items extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UI_Employer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UI_Items.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UI_Employer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger( UI_Items.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UI_Employer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UI_Items.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(UI_Employer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
@@ -328,11 +316,11 @@ public class UI_Items extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Back_To_Admin;
     private javax.swing.JTable Items_TP;
     private javax.swing.JButton btn_add;
     private javax.swing.JButton btn_del;
     private javax.swing.JButton btn_edit;
-    private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
