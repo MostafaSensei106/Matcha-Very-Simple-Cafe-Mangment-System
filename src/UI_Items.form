@@ -157,8 +157,8 @@
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="jComboBox1" alignment="1" pref="120" max="32767" attributes="0"/>
-                                      <Component id="text_name" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="category" alignment="1" pref="120" max="32767" attributes="0"/>
+                                      <Component id="items_name" alignment="1" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -169,14 +169,13 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="text_salary" pref="126" max="32767" attributes="0"/>
-                              <Component id="text_phone" max="32767" attributes="0"/>
+                              <Component id="price" pref="126" max="32767" attributes="0"/>
+                              <Component id="amount" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="130" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="btn_edit" alignment="1" max="32767" attributes="0"/>
                               <Component id="btn_add" alignment="1" max="32767" attributes="0"/>
-                              <Component id="btn_del" alignment="0" min="-2" pref="143" max="-2" attributes="0"/>
+                              <Component id="btn_del" alignment="1" min="-2" pref="143" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
                       </Group>
@@ -197,8 +196,6 @@
                               <Group type="102" attributes="0">
                                   <Component id="btn_add" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="btn_edit" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="btn_del" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
@@ -207,13 +204,13 @@
                                           <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="3" attributes="0">
                                               <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="text_name" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="items_name" alignment="3" min="-2" max="-2" attributes="0"/>
                                               <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="text_salary" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="price" alignment="3" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                                          <Component id="text_phone" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="amount" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="text_id" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -221,12 +218,12 @@
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="jComboBox1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="category" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
-                          <EmptySpace min="0" pref="47" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="59" max="32767" attributes="0"/>
                       </Group>
                       <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
@@ -239,12 +236,9 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JTextField" name="text_phone">
+                <Component class="javax.swing.JTextField" name="amount">
                 </Component>
-                <Component class="javax.swing.JTextField" name="text_salary">
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="text_salaryActionPerformed"/>
-                  </Events>
+                <Component class="javax.swing.JTextField" name="price">
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel2">
                   <Properties>
@@ -289,17 +283,6 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_addActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="btn_edit">
-                  <Properties>
-                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                      <Font name="Arial" size="14" style="1"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="Edit "/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_editActionPerformed"/>
-                  </Events>
-                </Component>
                 <Component class="javax.swing.JLabel" name="jLabel1">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -320,9 +303,6 @@
                   </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="text_id">
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="text_idActionPerformed"/>
-                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="Back_To_Admin">
                   <Properties>
@@ -335,9 +315,9 @@
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="Back_To_AdminMouseClicked"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JTextField" name="text_name">
+                <Component class="javax.swing.JTextField" name="items_name">
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox1">
+                <Component class="javax.swing.JComboBox" name="category">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Arial" size="14" style="1"/>

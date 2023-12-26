@@ -6,6 +6,7 @@
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel; //  هام جداا
+import java.awt.event.ActionEvent;
 import java.sql.*;
 /**
  *
@@ -64,20 +65,19 @@ public class UI_Items extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         Items_TP = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        text_phone = new javax.swing.JTextField();
-        text_salary = new javax.swing.JTextField();
+        amount = new javax.swing.JTextField();
+        price = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         btn_add = new javax.swing.JButton();
-        btn_edit = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         btn_del = new javax.swing.JButton();
         text_id = new javax.swing.JTextField();
         Back_To_Admin = new javax.swing.JButton();
-        text_name = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        items_name = new javax.swing.JTextField();
+        category = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Emp_Mangement");
@@ -97,12 +97,6 @@ public class UI_Items extends javax.swing.JFrame {
             }
         ));
         jScrollPane1.setViewportView(Items_TP);
-
-        text_salary.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                text_salaryActionPerformed(evt);
-            }
-        });
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel2.setText("Item Name :");
@@ -124,14 +118,6 @@ public class UI_Items extends javax.swing.JFrame {
             }
         });
 
-        btn_edit.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btn_edit.setText("Edit ");
-        btn_edit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_editActionPerformed(evt);
-            }
-        });
-
         jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel1.setText(" ItemID :");
 
@@ -143,12 +129,6 @@ public class UI_Items extends javax.swing.JFrame {
             }
         });
 
-        text_id.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                text_idActionPerformed(evt);
-            }
-        });
-
         Back_To_Admin.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         Back_To_Admin.setText("Back");
         Back_To_Admin.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -157,8 +137,8 @@ public class UI_Items extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Coffee", "Tea", "Dessert" }));
+        category.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        category.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Coffee", "Tea", "Dessert" }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -177,21 +157,20 @@ public class UI_Items extends javax.swing.JFrame {
                             .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, 0, 120, Short.MAX_VALUE)
-                            .addComponent(text_name, javax.swing.GroupLayout.Alignment.TRAILING))))
+                            .addComponent(category, javax.swing.GroupLayout.Alignment.TRAILING, 0, 120, Short.MAX_VALUE)
+                            .addComponent(items_name, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addGap(41, 41, 41)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel6)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(text_salary, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
-                    .addComponent(text_phone))
+                    .addComponent(price, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+                    .addComponent(amount))
                 .addGap(130, 130, 130)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btn_edit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btn_add, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btn_del, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_del, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(65, 65, 65))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
@@ -207,8 +186,6 @@ public class UI_Items extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(btn_add)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btn_edit)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btn_del))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -216,19 +193,19 @@ public class UI_Items extends javax.swing.JFrame {
                                 .addGap(37, 37, 37)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel2)
-                                    .addComponent(text_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(items_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel5)
-                                    .addComponent(text_salary, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(price, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(text_phone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(amount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel6)
                                 .addComponent(text_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel1)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(category, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3))))
-                .addGap(0, 47, Short.MAX_VALUE))
+                .addGap(0, 59, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addGap(132, 132, 132)
@@ -289,17 +266,10 @@ public class UI_Items extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_delActionPerformed
 
-    private void btn_editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_editActionPerformed
+    private void btn_addActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btn_editActionPerformed
-
-    private void btn_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_addActionPerformed
-
-    private void text_salaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_text_salaryActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_text_salaryActionPerformed
+    }
+//GEN-LAST:event_btn_addActionPerformed
 
     private void Back_To_AdminMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Back_To_AdminMouseClicked
         // TODO add your handling code here:
@@ -309,10 +279,6 @@ public class UI_Items extends javax.swing.JFrame {
         Admin_back.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         dispose();
     }//GEN-LAST:event_Back_To_AdminMouseClicked
-
-    private void text_idActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_text_idActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_text_idActionPerformed
 
     /**
      * @param args the command line arguments
@@ -355,10 +321,11 @@ public class UI_Items extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Back_To_Admin;
     private javax.swing.JTable Items_TP;
+    private javax.swing.JTextField amount;
     private javax.swing.JButton btn_add;
     private javax.swing.JButton btn_del;
-    private javax.swing.JButton btn_edit;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> category;
+    private javax.swing.JTextField items_name;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -368,9 +335,7 @@ public class UI_Items extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField price;
     private javax.swing.JTextField text_id;
-    private javax.swing.JTextField text_name;
-    private javax.swing.JTextField text_phone;
-    private javax.swing.JTextField text_salary;
     // End of variables declaration//GEN-END:variables
 }

@@ -15,7 +15,7 @@ import java.util.Vector;
 
 public class UI_Cash extends javax.swing.JFrame {
     /**
-     * @author Yasmeen, Mostafa Sensei106
+     * @author  Mostafa Sensei106
      */
 
 
@@ -47,14 +47,13 @@ public class UI_Cash extends javax.swing.JFrame {
     }
 
     //ستاك عام في الكلاس كله
-    Stack<Action> actions = new Stack<>();
+    Stack<Action> actions = new Stack<>();//   Stack
     Runnable updateTimeRunnable = new Runnable() {
         @Override
         public void run() {
             while (true) {
-                // Get the current time
                 LocalDateTime now = LocalDateTime.now();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
                 String formattedNow = now.format(formatter);
 
                 // Update the time label
@@ -71,7 +70,7 @@ public class UI_Cash extends javax.swing.JFrame {
     };
 
     /**
-     * Creates new form cash2
+     *
      */
 
     //كونستراكتور
@@ -79,7 +78,7 @@ public class UI_Cash extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(this);
         //قيم افتراضية
-        Pill_Box.setEditable(false); // قفل التعديل في الفاتورة
+        Bill_Box.setEditable(false); // قفل التعديل في الفاتورة
 
         sup_total.setEditable(false); // قفل التعيدل في المجموع
 
@@ -98,19 +97,6 @@ public class UI_Cash extends javax.swing.JFrame {
 
         Emp_Name.setText(E);
 
-        LocalDateTime now = LocalDateTime.now();         // باخد الوقت والتاريخ الحالي
-
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"); // تجديد شكل التايخ للعرض
-
-        String formattedNow = now.format(formatter);
-
-        //اضفاة الساعة
-        Date_txt.setText(formattedNow);
-
-        //اضافة الاسم من كلاس تسجيل الدخول
-        Emp_Name.setText(E);
-
         //الفاتورة الافضتراضية
         String asciiArt =
                         "*****************\n" +
@@ -124,25 +110,23 @@ public class UI_Cash extends javax.swing.JFrame {
         String receiptHeader = asciiArt + "\nEmployee: " + employeeName + "\n-----------------------------\n";
 
         // Add the receipt header to the beginning of the receipt
-        Pill_Box.setText(receiptHeader + Pill_Box.getText());
+        Bill_Box.setText(receiptHeader + Bill_Box.getText());
 
         try {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
             String sql = "SELECT * FROM m_items";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet resultSet = stmt.executeQuery();
-            DefaultTableModel model = new DefaultTableModel(new String[]{"Item ID", "Category", "Item Name", "Price", "Amount"}, 0) {
+            DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Category", "Name", "Price", "Amount"}, 0) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
-                    // This causes all cells to be not editable
                     return false;
                 }
             };
 
-            // Iterate over the ResultSet and add each row to the model
+
             while (resultSet.next()) {
                 int itemId = resultSet.getInt("items_id");
-                        
                 String category = resultSet.getString("items_category");
                 String itemName = resultSet.getString("items_name");
                 double price = resultSet.getDouble("items_prices");
@@ -221,7 +205,7 @@ public class UI_Cash extends javax.swing.JFrame {
                     stmt.setString(1, "%" + searchText + "%"); // Use % for wildcard search
                     ResultSet resultSet = stmt.executeQuery();
 
-                    DefaultTableModel model = new DefaultTableModel(new String[]{"Item ID", "Category", "Item Name", "Price", "Amount"}, 0) {
+                    DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Category", "Name", "Price", "Amount"}, 0) {
 
                         @Override
                         public boolean isCellEditable(int row, int column) { // غير قابلة للتعديل
@@ -287,7 +271,7 @@ public class UI_Cash extends javax.swing.JFrame {
         Add_Btn = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        Pill_Box = new javax.swing.JTextPane();
+        Bill_Box = new javax.swing.JTextPane();
         Print_Btn = new javax.swing.JButton();
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -525,7 +509,7 @@ public class UI_Cash extends javax.swing.JFrame {
             }
         });
 
-        jScrollPane2.setViewportView(Pill_Box);
+        jScrollPane2.setViewportView(Bill_Box);
 
         Print_Btn.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         Print_Btn.setText(" Print");
@@ -625,6 +609,7 @@ public class UI_Cash extends javax.swing.JFrame {
 
 
     private void recalculateTotals() {
+
         if (!actions.isEmpty()) {
             Action lastAction = actions.peek();// اخر شيء عملية اضافة
 
@@ -668,13 +653,14 @@ public class UI_Cash extends javax.swing.JFrame {
     // كود اضافة عملية جدية
     private void Add_BtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Add_BtnMouseClicked
         // TODO add your handling code here:
+
         double subtotalBeforeAdding = Double.parseDouble(sup_total.getText()); // حفظ المجموع قبل الاضفاة للعودة له مره اخري
 
         DefaultTableModel originalModel = (DefaultTableModel) Casher_TP.getModel(); // حفظ الجدول
 
         Vector data = new Vector();// ما هي الفيكتورز
         //وسيلة لحفظ البيانات جاجه شبه المصفوفة
-        // المصفوفة محدودخ الحجم او متغير بحجم معين ال فيكوتر نفس وظيفة المصفوفه و مع كل عنصر حجمة يزيد
+        // المصفوفة محدوده الحجم او متغير بحجم معين ال فيكوتر نفس وظيفة المصفوفه و مع كل عنصر حجمة يزيد
         // فرضا عملنا فيكنتور 10 لو تم اضافة عنصر يتحول الحجم الي 11 وهكذا
 
         // بخزن الجدول كله صف في الفيكتور
@@ -689,7 +675,7 @@ public class UI_Cash extends javax.swing.JFrame {
 
         DefaultTableModel modelBeforeAdding = new DefaultTableModel(data, columnIdentifiers);// بعمل بيها جدول جديد قبل الاضافة
 
-        Action actionBeforeAdding = new Action(modelBeforeAdding, Pill_Box.getText(), subtotalBeforeAdding); // عملنا ابوجيت من كلاس الاستاك وبعمل سيف لل جدول و الفاتورة و المجموع
+        Action actionBeforeAdding = new Action(modelBeforeAdding, Bill_Box.getText(), subtotalBeforeAdding); // عملنا ابوجيت من كلاس الاستاك وبعمل سيف لل جدول و الفاتورة و المجموع
 
         actions.push(actionBeforeAdding);// جطينا لابوجيكت جوا الاستاك
 
@@ -710,8 +696,9 @@ public class UI_Cash extends javax.swing.JFrame {
             if (Qant_5 <= amount) {
                 amount -= Qant_5; // هسحب من المخزون
                 Casher_TP.setValueAt(amount, selectedRowIndex, 4);
-                String receipt = "Item ID: " + itemId + "\n" + "Item Name: " + itemName + "\n" + "Category: " + category + "\n" + "Price: " + price + "\n" + "Quantity: " + Qant_5 + "\n" + "\n" + "-----------------------------\n";
-                Pill_Box.setText(Pill_Box.getText() + receipt);
+                String receipt = "ID: " + itemId + "\n" + "Name: " + itemName + "\n" + "Category: " + category + "\n" + "Price: " + price + "\n" + "Quantity: " + Qant_5 + "\n" + "\n" + "-----------------------------\n";
+                Bill_Box.setText(Bill_Box.getText() + receipt);
+
                 try {
                     Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
                     String sql = "UPDATE m_items SET items_amount = ? WHERE items_id = ?";
@@ -749,10 +736,15 @@ public class UI_Cash extends javax.swing.JFrame {
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
         // TODO add your handling code here:
         UI_Login Login_Back = new UI_Login();
+
         Login_Back.show();
+
         dispose();
+
         Login_Back.setTitle("Matcha Cafe - Admin");
+
         Login_Back.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
     }//GEN-LAST:event_jButton4MouseClicked
 
     private void Cat_iActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Cat_iActionPerformed
@@ -764,30 +756,39 @@ public class UI_Cash extends javax.swing.JFrame {
 
         try {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
+
             String sql;
+
             PreparedStatement stmt;
+
             if (searchText.isEmpty()) {
+
                 sql = "SELECT * FROM m_items WHERE items_category = ?";
+
                 stmt = con.prepareStatement(sql);
+
                 stmt.setString(1, category);
+
             }
             else {
+
                 sql = "SELECT * FROM m_items WHERE items_category = ? AND items_name LIKE ?";
+
                 stmt = con.prepareStatement(sql);
+
                 stmt.setString(1, category);
+
                 stmt.setString(2, "%" + searchText + "%");
+
             }
 
             ResultSet resultSet = stmt.executeQuery();
             DefaultTableModel model = new DefaultTableModel(new String[]{"Item ID", "Category", "Item Name", "Price", "Amount"}, 0) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
-                    // This causes all cells to be not editable
                     return false;
                 }
             };
-
-            // Iterate over the ResultSet and add each row to the model
             while (resultSet.next()) {
                 int itemId = resultSet.getInt("items_id");
                 String categories = resultSet.getString("items_category");
@@ -796,8 +797,6 @@ public class UI_Cash extends javax.swing.JFrame {
                 int amount = resultSet.getInt("items_amount");
                 model.addRow(new Object[]{itemId, categories, itemName, price, amount});
             }
-
-            // Set the model to the JTable
             Casher_TP.setModel(model);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -822,18 +821,14 @@ public class UI_Cash extends javax.swing.JFrame {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedNow = now.format(formatter);
+        String Print_Bill = Bill_Box.getText();
 
-        // Append the date and time to the end of the Pill_Box text
-        String Print_Bill = Pill_Box.getText();
-
-
-        // Get the initial receipt text
+//القيمة الافتراضية للفاتورة
         String asciiArt =
-                "*****************\n" +
+                        "*****************\n" +
                         "* Matcha Cafe *\n" +
                         "*****************";
-
-        // Get the name of the employee
+        //باخد اسم الموظف
         String employeeName = Emp_Name.getText();
 
         // Concatenate the ASCII art, date, and employee name
@@ -859,7 +854,7 @@ public class UI_Cash extends javax.swing.JFrame {
 
             Casher_TP.setModel(lastAction.getModel());// برجع الجدول الي [حفظته]
 
-            Pill_Box.setText(lastAction.getReceipt()); // برجع الرسيت
+            Bill_Box.setText(lastAction.getReceipt()); // برجع الرسيت
 
             sup_total.setText(String.valueOf(lastAction.getSubtotal())); // برجع السبتوتال
 
@@ -936,7 +931,7 @@ public class UI_Cash extends javax.swing.JFrame {
     private javax.swing.JLabel Emp_Name;
     private javax.swing.JPanel Head_panal;
     private javax.swing.JPanel Landing_Casher;
-    private javax.swing.JTextPane Pill_Box;
+    private javax.swing.JTextPane Bill_Box;
     private javax.swing.JButton Print_Btn;
     private javax.swing.JSpinner Qant;
     private javax.swing.JTextField Search_I;
