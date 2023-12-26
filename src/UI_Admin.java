@@ -19,6 +19,9 @@ public class UI_Admin extends javax.swing.JFrame {
         this.setLocationRelativeTo(this);
     }
 
+    public  void  setE(String Ad){
+        Admin_Name.setText(Ad);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -33,6 +36,9 @@ public class UI_Admin extends javax.swing.JFrame {
         btn_admin_back = new javax.swing.JButton();
         Btn_Emp_Mange = new javax.swing.JButton();
         To_Items_Manag = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        Admin_Name = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
         jButton3.setText("jButton3");
@@ -81,6 +87,15 @@ public class UI_Admin extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel1.setText("Wellcom To Matcha Caffe Management System");
+
+        jLabel3.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel3.setText("Mr / Mis : ");
+
+        Admin_Name.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        Admin_Name.setText("Name");
+
         javax.swing.GroupLayout Admin_choose_panalLayout = new javax.swing.GroupLayout(Admin_choose_panal);
         Admin_choose_panal.setLayout(Admin_choose_panalLayout);
         Admin_choose_panalLayout.setHorizontalGroup(
@@ -96,15 +111,30 @@ public class UI_Admin extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(btn_admin_back, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
+            .addGroup(Admin_choose_panalLayout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addGroup(Admin_choose_panalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addGroup(Admin_choose_panalLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Admin_Name, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         Admin_choose_panalLayout.setVerticalGroup(
             Admin_choose_panalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(Admin_choose_panalLayout.createSequentialGroup()
-                .addGap(92, 92, 92)
+                .addGap(22, 22, 22)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(Admin_choose_panalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(Admin_Name))
+                .addGap(33, 33, 33)
                 .addGroup(Admin_choose_panalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(To_Items_Manag, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Btn_Emp_Mange, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
+                    .addComponent(Btn_Emp_Mange, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(To_Items_Manag, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
                 .addComponent(btn_admin_back, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -200,17 +230,20 @@ public class UI_Admin extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new UI_Admin().setVisible(true);
+//              new UI_Admin().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Admin_Name;
     public static javax.swing.JPanel Admin_choose_panal;
     private javax.swing.JButton Btn_Emp_Mange;
     private javax.swing.JButton To_Items_Manag;
     private javax.swing.JButton btn_admin_back;
     private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     // End of variables declaration//GEN-END:variables
 }

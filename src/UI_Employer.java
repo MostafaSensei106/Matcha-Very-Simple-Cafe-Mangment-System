@@ -164,14 +164,9 @@ public class UI_Employer extends javax.swing.JFrame {
 
         Back_To_Admin.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         Back_To_Admin.setText("Back");
-        Back_To_Admin.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                Back_To_AdminMouseDragged(evt);
-            }
-        });
-        Back_To_Admin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Back_To_AdminActionPerformed(evt);
+        Back_To_Admin.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Back_To_AdminMouseClicked(evt);
             }
         });
 
@@ -284,23 +279,6 @@ public class UI_Employer extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_delActionPerformed
 
-    private void Back_To_AdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Back_To_AdminActionPerformed
-        // TODO add your handling code here:
-        UI_Admin Admin_Back = new UI_Admin();
-        Admin_Back.show();
-        Admin_Back.setTitle("Matcha Cafe - Admin");
-        dispose();
-    }//GEN-LAST:event_Back_To_AdminActionPerformed
-
-    private void Back_To_AdminMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Back_To_AdminMouseDragged
-        // TODO add your handling code here:
-        UI_Admin Back_Admin = new UI_Admin();
-        Back_Admin.show();
-        dispose();
-        Back_Admin.setTitle("Matcha Cafe - Admin");
-        Back_Admin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }//GEN-LAST:event_Back_To_AdminMouseDragged
-
     private void btn_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_addActionPerformed
@@ -380,6 +358,37 @@ public class UI_Employer extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_btn_delMouseClicked
+
+    private void Back_To_AdminMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Back_To_AdminMouseClicked
+        // TODO add your handling code here:
+     //   try {
+
+//            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
+//            String AD_EM_Name = "";
+//            String sql = "SELECT * FROM m_matcha WHERE ID = ? AND Password = ? ";
+//            PreparedStatement stmt = con.prepareStatement(sql);
+//            stmt.setString(1, ID_Login.getText());
+//
+//                String AD_EM_Name = resultSet.getString("Name");
+
+
+            UI_Admin Back_Admin = new UI_Admin();
+//            Back_Admin.setE(AD_EM_Name);
+            Back_Admin.show();
+            dispose();
+            Back_Admin.setTitle("Matcha Cafe - Admin");
+            Back_Admin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+
+
+
+
+
+
+    }//GEN-LAST:event_Back_To_AdminMouseClicked
 
 
 

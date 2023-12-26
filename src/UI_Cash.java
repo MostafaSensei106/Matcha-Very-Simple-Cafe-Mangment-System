@@ -721,8 +721,7 @@ public class UI_Cash extends javax.swing.JFrame {
                 String itemName = resultSet.getString("items_name");
                 double price = resultSet.getDouble("items_prices");
                 int amount = resultSet.getInt("items_amount");
-                double discount = resultSet.getDouble("items_discount");
-                model.addRow(new Object[]{itemId, categories, itemName, price, amount, discount});
+                model.addRow(new Object[]{itemId, categories, itemName, price, amount});
             }
 
             // Set the model to the JTable
