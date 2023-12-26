@@ -121,7 +121,7 @@ public class UI_Cash extends javax.swing.JFrame {
         String employeeName = Emp_Name.getText();
         new Thread(updateTimeRunnable).start();
         // Concatenate the ASCII art, date, and employee name
-        String receiptHeader = asciiArt + "\nDate: " + formattedNow + "\nEmployee: " + employeeName + "\n-----------------------------\n";
+        String receiptHeader = asciiArt + "\nEmployee: " + employeeName + "\n-----------------------------\n";
 
         // Add the receipt header to the beginning of the receipt
         Pill_Box.setText(receiptHeader + Pill_Box.getText());
@@ -173,25 +173,26 @@ public class UI_Cash extends javax.swing.JFrame {
             }
 
             private void updateDiscountAndTotal() {
-                double subtotal = Double.parseDouble(sup_total.getText());
-                double discountPercentage = 0;
+    double subtotal = Double.parseDouble(sup_total.getText());
+    double discountPercentage = 0;
 
-                if (!discount_per.getText().isEmpty()) {
-                    //تغير الاسترينج
-                    discountPercentage = Double.parseDouble(discount_per.getText()) / 100;
-                }
+    if (!discount_per.getText().isEmpty()) {
+        discountPercentage = Double.parseDouble(discount_per.getText()) / 100;
+    }
 
-                if( discountPercentage < 100  && discountPercentage > 0){
-                    double discountAmount = subtotal * discountPercentage;
+    if(discountPercentage < 0 || discountPercentage > 1){
+        JOptionPane.showMessageDialog(null , "Discount percentage should be between 0 and 100");
+        return;
+    }
 
-                    discount_cont.setText(String.valueOf(discountAmount));
+    double discountAmount = subtotal * discountPercentage;
 
-                    double grandTotal = subtotal - discountAmount;
+    discount_cont.setText(String.valueOf(discountAmount));
 
-                    grand_total.setText(String.valueOf(grandTotal));
-                }
+    double grandTotal = subtotal - discountAmount;
 
-            }
+    grand_total.setText(String.valueOf(grandTotal));
+}
         });
 
         // كود البحث
@@ -807,7 +808,13 @@ public class UI_Cash extends javax.swing.JFrame {
 
     private void Print_BtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Print_BtnMouseClicked
         // TODO add your handling code here:
-        String Print_Bill = Pill_Box.getText();
+        // Get the current date and time
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedNow = now.format(formatter);
+
+        // Append the date and time to the end of the Pill_Box text
+        String Print_Bill = Pill_Box.getText()+ "\nPrinted on: " + formattedNow;
         JOptionPane.showMessageDialog(null, Print_Bill);
     }//GEN-LAST:event_Print_BtnMouseClicked
 
