@@ -762,6 +762,8 @@ public class UI_Cash extends javax.swing.JFrame {
             sup_total.setText(String.valueOf(lastAction.getSubtotal())); // برجع السبتوتال
 
             recalculateTotals();// بترسيت الجدول من اول وجديد
+        }else {
+            JOptionPane.showMessageDialog(null,"No Add OP Have Been Selected");
         }
     }                                       
 
