@@ -712,6 +712,16 @@ public class UI_Cash extends javax.swing.JFrame {
                 Casher_TP.setValueAt(amount, selectedRowIndex, 4);
                 String receipt = "Item ID: " + itemId + "\n" + "Item Name: " + itemName + "\n" + "Category: " + category + "\n" + "Price: " + price + "\n" + "Quantity: " + Qant_5 + "\n" + "\n" + "-----------------------------\n";
                 Pill_Box.setText(Pill_Box.getText() + receipt);
+                try {
+                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
+                    String sql = "UPDATE m_items SET items_amount = ? WHERE items_id = ?";
+                    PreparedStatement stmt = con.prepareStatement(sql);
+                    stmt.setInt(1, amount);
+                    stmt.setObject(2, itemId);
+                    stmt.executeUpdate();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
             else {
                 JOptionPane.showMessageDialog(null, "The quantity is greater than the amount of items available.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -814,9 +824,28 @@ public class UI_Cash extends javax.swing.JFrame {
         String formattedNow = now.format(formatter);
 
         // Append the date and time to the end of the Pill_Box text
-        String Print_Bill = Pill_Box.getText()+ "\nPrinted on: " + formattedNow;
-        JOptionPane.showMessageDialog(null, Print_Bill);
-    }//GEN-LAST:event_Print_BtnMouseClicked
+        String Print_Bill = Pill_Box.getText();
+
+
+        // Get the initial receipt text
+        String asciiArt =
+                "*****************\n" +
+                        "* Matcha Cafe *\n" +
+                        "*****************";
+
+        // Get the name of the employee
+        String employeeName = Emp_Name.getText();
+
+        // Concatenate the ASCII art, date, and employee name
+        String receiptHeader = asciiArt + "\nEmployee: " + employeeName + "\n-----------------------------\n";
+
+        // Check if the Pill_Box text is the same as the initial receipt text
+        if (Print_Bill.equals(receiptHeader)) {
+            // Show a message to the user that no item was added
+            JOptionPane.showMessageDialog(null, "No item was added.");
+        } else {
+            JOptionPane.showMessageDialog(null, Print_Bill+ "\nPrinted on: " + formattedNow);
+        }    }//GEN-LAST:event_Print_BtnMouseClicked
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
@@ -828,13 +857,37 @@ public class UI_Cash extends javax.swing.JFrame {
 
             Action lastAction = actions.pop(); // برجع اخر  تعيدل جواه
 
-            Casher_TP.setModel(lastAction.getModel());// برجع الجدول الي جفظتة
+            Casher_TP.setModel(lastAction.getModel());// برجع الجدول الي [حفظته]
 
             Pill_Box.setText(lastAction.getReceipt()); // برجع الرسيت
 
             sup_total.setText(String.valueOf(lastAction.getSubtotal())); // برجع السبتوتال
 
             recalculateTotals();// بترسيت الجدول من اول وجديد
+            // Update the database
+
+            DefaultTableModel model = lastAction.getModel();
+            for (int i = 0; i < model.getRowCount(); i++) {
+                int itemId = (int) model.getValueAt(i, 0);
+                String category = (String) model.getValueAt(i, 1);
+                String itemName = (String) model.getValueAt(i, 2);
+                double price = (double) model.getValueAt(i, 3);
+                int amount = (int) model.getValueAt(i, 4);
+
+                try {
+                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
+                    String sql = "UPDATE m_items SET items_category = ?, items_name = ?, items_prices = ?, items_amount = ? WHERE items_id = ?";
+                    PreparedStatement stmt = con.prepareStatement(sql);
+                    stmt.setString(1, category);
+                    stmt.setString(2, itemName);
+                    stmt.setDouble(3, price);
+                    stmt.setInt(4, amount);
+                    stmt.setInt(5, itemId);
+                    stmt.executeUpdate();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }else {
             JOptionPane.showMessageDialog(null,"No Add OP Have Been Selected");
         }
