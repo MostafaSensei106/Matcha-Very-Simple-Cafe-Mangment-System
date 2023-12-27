@@ -24,15 +24,15 @@ DROP TABLE IF EXISTS `m_matcha`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `m_matcha` (
   `ID` int NOT NULL AUTO_INCREMENT,
+  `UN_ID` int DEFAULT NULL,
   `Password` varchar(45) DEFAULT NULL,
   `Position` varchar(45) DEFAULT NULL,
-  `First Name` varchar(45) DEFAULT NULL,
-  `Last Name` varchar(45) DEFAULT NULL,
+  `Name` varchar(45) DEFAULT NULL,
   `Gender` varchar(45) DEFAULT NULL,
   `Salary` int DEFAULT NULL,
-  `Phone Number` double DEFAULT NULL,
+  `Phone` double DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +41,7 @@ CREATE TABLE `m_matcha` (
 
 LOCK TABLES `m_matcha` WRITE;
 /*!40000 ALTER TABLE `m_matcha` DISABLE KEYS */;
-INSERT INTO `m_matcha` VALUES (1,'0000','Admin','Mostafa','Sensei','Male',3300,1014414536),(2,'1111','Admin','Momen','Magdy','Male',3300,3336665559),(3,'123','Employer','Ahmed','Belal','Male',200,5555555555),(4,'123','Employer','Yuzuki','Mimiko','Femal',80,3031445788);
+INSERT INTO `m_matcha` VALUES (1,2658,'0000','Admin','Mostafa','Male',3300,1014414536),(2,5214,'1111','Admin','Momen','Male',3300,3336665559),(3,6256,'147','Employer','Ahmed','Male',200,5555555555),(4,6526,'123','Employer','Yuzuki','Femal',80,3031445788),(5,1111,'12345','Employer','Yasmeen ','Femal',3200,56549486);
 /*!40000 ALTER TABLE `m_matcha` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-21 22:27:07
+-- Dump completed on 2023-12-27  2:01:14

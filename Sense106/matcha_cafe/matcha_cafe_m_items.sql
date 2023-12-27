@@ -28,10 +28,8 @@ CREATE TABLE `m_items` (
   `items_name` varchar(45) NOT NULL,
   `items_prices` double NOT NULL,
   `items_amount` int NOT NULL,
-  `items_discount` double NOT NULL,
-  `m_itemscol` varchar(45) NOT NULL,
   PRIMARY KEY (`items_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +38,7 @@ CREATE TABLE `m_items` (
 
 LOCK TABLES `m_items` WRITE;
 /*!40000 ALTER TABLE `m_items` DISABLE KEYS */;
-INSERT INTO `m_items` VALUES (1,'Coffee','Espresso',10,20,0,''),(2,'Coffee','Americno',10,20,0,''),(3,'Coffee','Cafe latte',11,20,0,''),(4,'Coffee','Espresso',10,20,0,''),(5,'Coffee','Cafe Mocha',9,20,0,''),(6,'Coffee','Cappucino',10,20,0,''),(7,'Coffee','Caramel Machiato',9,20,0,''),(8,'Tea','Matcha',11,20,0,''),(9,'Tea','Citrus',10,20,0,''),(10,'Tea','Earl Grey',11,20,0,''),(11,'Tea','Paper Mint',9,20,0,''),(12,'Dessert','Choco Chip Cookies',12,20,0,''),(13,'Dessert','Lemon Cheese Cake',10,20,0,''),(14,'Dessert','Blueberry Muffin',15,20,0,''),(15,'Dessert','Fudge Browines',13,20,0,'');
+INSERT INTO `m_items` VALUES (1,'Coffee','Espresso',10,3),(2,'Coffee','Americno',10,20),(3,'Coffee','Cafe latte',11,6),(4,'Coffee','Espresso',10,20),(5,'Coffee','Cafe Mocha',9,10),(6,'Coffee','Cappucino',10,20),(7,'Coffee','Caramel Machiato',9,20),(8,'Tea','Matcha',11,11),(9,'Tea','Citrus',10,10),(10,'Tea','Earl Grey',11,19),(11,'Tea','Paper Mint',9,10),(12,'Dessert','Choco Chip Cookies',12,15),(13,'Dessert','Lemon Cheese Cake',10,20),(14,'Dessert','Blueberry Muffin',15,20),(15,'Dessert','Fudge Browines',13,10),(16,'Shesha','Apple',5,20),(17,'Shesha','Kudamono',5,20);
 /*!40000 ALTER TABLE `m_items` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-21 22:27:07
+-- Dump completed on 2023-12-27  2:01:14
