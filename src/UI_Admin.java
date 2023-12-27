@@ -19,9 +19,7 @@ public class UI_Admin extends javax.swing.JFrame {
         this.setLocationRelativeTo(this);
     }
 
-    public  void  setE(String Ad){
-        Admin_Name.setText(Ad);
-    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -36,7 +34,6 @@ public class UI_Admin extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        Admin_Name = new javax.swing.JLabel();
         Admin_choose_panal = new javax.swing.JPanel();
         btn_admin_back = new javax.swing.JButton();
         Btn_Emp_Mange = new javax.swing.JButton();
@@ -54,13 +51,10 @@ public class UI_Admin extends javax.swing.JFrame {
         setBackground(new java.awt.Color(254, 223, 205));
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jLabel1.setText("Wellcom To Matcha Caffe Management System");
+        jLabel1.setText("Wellcom To MatchaManagement System");
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
         jLabel3.setText("Hi ");
-
-        Admin_Name.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
-        Admin_Name.setText("Name");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -68,14 +62,10 @@ public class UI_Admin extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(6, 6, 6)
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE))
                 .addGap(0, 6, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Admin_Name, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(123, 123, 123))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -83,9 +73,7 @@ public class UI_Admin extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(48, 48, 48)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(Admin_Name))
+                .addComponent(jLabel3)
                 .addContainerGap(107, Short.MAX_VALUE))
         );
 
@@ -286,8 +274,7 @@ public class UI_Admin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel Admin_Name;
-    private javax.swing.JPanel Admin_choose_panal;
+    public static javax.swing.JPanel Admin_choose_panal;
     private javax.swing.JButton Btn_Emp_Mange;
     private javax.swing.JButton To_Items_Manag;
     private javax.swing.JButton btn_admin_back;

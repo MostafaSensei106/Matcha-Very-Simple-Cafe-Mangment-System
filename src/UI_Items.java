@@ -5,50 +5,83 @@
 
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel; //  هام جداا
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.sql.*;
+
+
+
 /**
- *
  * @author Sara
  */
 public class UI_Items extends javax.swing.JFrame {
 
+    class EditableTableModel extends DefaultTableModel {
+        EditableTableModel(Object[] columnNames, int rowCount) {
+            super(columnNames, rowCount);
+        }
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return true;
+        }
+    }
+
     /**
-     * 
-     * 
+     *
      */
-        public UI_Items() {
+    public UI_Items() {
         initComponents();
-         this.setLocationRelativeTo(this);
-            try {
-                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
-                String sql = "SELECT * FROM m_items";
-                PreparedStatement stmt = con.prepareStatement(sql);
-                ResultSet resultSet = stmt.executeQuery();
-                DefaultTableModel model = new DefaultTableModel(new String[]{"Item ID", "Category", "Item Name", "Price", "Amount"}, 0) {
-                    @Override
-                    public boolean isCellEditable(int row, int column) {
-                        // This causes all cells to be not editable
-                        return false;
-                    }
-                };
-
-                // Iterate over the ResultSet and add each row to the model
-                while (resultSet.next()) {
-                    int itemId = resultSet.getInt("items_id");
-                    String category = resultSet.getString("items_category");
-                    String itemName = resultSet.getString("items_name");
-                    double price = resultSet.getDouble("items_prices");
-                    int amount = resultSet.getInt("items_amount");
-                    model.addRow(new Object[]{itemId, category, itemName, price, amount});
+        this.setLocationRelativeTo(this);
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
+            String sql = "SELECT * FROM m_items";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet resultSet = stmt.executeQuery();
+            DefaultTableModel model = new DefaultTableModel(new String[]{"Item ID", "Category", "Item Name", "Price", "Amount"}, 0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
                 }
-                // Set the model to the JTable
-                Items_TP.setModel(model);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            };
 
+            while (resultSet.next()) {
+                int itemId = resultSet.getInt("items_id");
+                String category = resultSet.getString("items_category");
+                String itemName = resultSet.getString("items_name");
+                double price = resultSet.getDouble("items_prices");
+                int amount = resultSet.getInt("items_amount");
+                model.addRow(new Object[]{itemId, category, itemName, price, amount});
+            }
+            Items_TP.setModel(model);
+            model.addTableModelListener(new TableModelListener() {
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    if (e.getType() == TableModelEvent.UPDATE) {
+                        int row = e.getFirstRow();
+                        int column = e.getColumn();
+                        Object newValue = model.getValueAt(row, column);
+                        Object id = model.getValueAt(row, 0); // باخد اي دي اول صف
+                        String columnName = model.getColumnName(column);// باخد اسم العمود الي تم الغير فية
+                        try {
+                            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
+                            String sql = "UPDATE m_items SET " + columnName + " = ? WHERE items_id= ?";
+                            PreparedStatement stmt = con.prepareStatement(sql);
+                            stmt.setObject(1, newValue);
+                            stmt.setObject(2, id);
+                            stmt.executeUpdate();
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+            }
+            );
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -72,9 +105,7 @@ public class UI_Items extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         btn_add = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         btn_del = new javax.swing.JButton();
-        text_id = new javax.swing.JTextField();
         Back_To_Admin = new javax.swing.JButton();
         items_name = new javax.swing.JTextField();
         category = new javax.swing.JComboBox<>();
@@ -112,17 +143,24 @@ public class UI_Items extends javax.swing.JFrame {
 
         btn_add.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btn_add.setText("Add ");
+        btn_add.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_addMouseClicked(evt);
+            }
+        });
         btn_add.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_addActionPerformed(evt);
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel1.setText(" ItemID :");
-
         btn_del.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         btn_del.setText("Delet ");
+        btn_del.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_delMouseClicked(evt);
+            }
+        });
         btn_del.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_delActionPerformed(evt);
@@ -146,19 +184,13 @@ public class UI_Items extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap(109, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(text_id, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(category, javax.swing.GroupLayout.Alignment.TRAILING, 0, 120, Short.MAX_VALUE)
-                            .addComponent(items_name, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(items_name, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                    .addComponent(category, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(41, 41, 41)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel6)
@@ -188,29 +220,25 @@ public class UI_Items extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btn_del))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(37, 37, 37)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel2)
-                                    .addComponent(items_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel5)
-                                    .addComponent(price, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(amount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel6)
-                                .addComponent(text_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel1)))
+                        .addGap(5, 5, 5)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(items_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(category, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))))
-                .addGap(0, 59, Short.MAX_VALUE))
+                            .addComponent(jLabel5)
+                            .addComponent(price, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)
+                            .addComponent(category, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(amount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel6)))
+                .addGap(0, 89, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addGap(132, 132, 132)
                     .addComponent(Back_To_Admin, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addContainerGap(16, Short.MAX_VALUE)))
         );
 
         jDesktopPane1.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -231,7 +259,7 @@ public class UI_Items extends javax.swing.JFrame {
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDesktopPane1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -280,6 +308,29 @@ public class UI_Items extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_Back_To_AdminMouseClicked
 
+    private void btn_addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_addMouseClicked
+        // TODO add your handling code here:
+        Add();
+    }//GEN-LAST:event_btn_addMouseClicked
+
+    private void btn_delMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_delMouseClicked
+        // TODO add your handling code here:
+               int selectedRowIndex = Items_TP.getSelectedRow();
+        if (selectedRowIndex != -1) {
+            Object ID = Items_TP.getValueAt(selectedRowIndex, 0);
+            try {
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
+                String sql = "DELETE FROM m_items WHERE items_id = ?";
+                PreparedStatement stmt = con.prepareStatement(sql);
+                stmt.setString(1, String.valueOf(ID)); // Assuming ID is a string; adjust if it's an integer
+                stmt.executeUpdate();
+                TP_After_Update();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_btn_delMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -287,7 +338,7 @@ public class UI_Items extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -299,7 +350,7 @@ public class UI_Items extends javax.swing.JFrame {
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(UI_Items.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger( UI_Items.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UI_Items.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(UI_Items.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
@@ -318,6 +369,77 @@ public class UI_Items extends javax.swing.JFrame {
         });
     }
 
+    public void Add() {
+        if (items_name.getText().isEmpty()  || amount.getText().isEmpty() || price.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Do Not Let Data Empty", "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        String Name = items_name.getText();
+        Double price_get = Double.parseDouble(price.getText());
+        int Amount = Integer.parseInt(amount.getText());
+        String cat = (String) category.getSelectedItem();
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
+            String sql = "INSERT INTO m_items (items_category, items_name,items_prices, items_amount) VALUES (?, ?,?, ?)";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, cat);
+            stmt.setString(2, Name);
+            stmt.setDouble(3, price_get);
+            stmt.setInt(4, Amount);
+            stmt.executeUpdate();
+            TP_After_Update();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void TP_After_Update() {
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
+            String sql = "SELECT * FROM m_items";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet resultSet = stmt.executeQuery();
+            EditableTableModel model = new EditableTableModel(new String[]{"Item ID", "Category", "Item Name", "Price", "Amount"}, 0);
+            while (resultSet.next()) {
+                int itemId = resultSet.getInt("items_id");
+                String category = resultSet.getString("items_category");
+                String itemName = resultSet.getString("items_name");
+                double price = resultSet.getDouble("items_prices");
+                int amount = resultSet.getInt("items_amount");
+                model.addRow(new Object[]{itemId, category, itemName, price, amount});
+            }
+            Items_TP.setModel(model);
+            model.addTableModelListener(new TableModelListener() {
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    if (e.getType() == TableModelEvent.UPDATE) {
+                        int row = e.getFirstRow();
+                        int column = e.getColumn();
+                        Object newValue = model.getValueAt(row, column);
+
+                        Object id = model.getValueAt(row, 0); // باخد اي دي اول صف
+
+                        String columnName = model.getColumnName(column);// باخد اسم العمود الي تم الغير فية
+
+                        try {
+                            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/matcha_cafe", "root", "root");
+                            String sql = "UPDATE m_items SET " + columnName + " = ? WHERE items_id= ?";
+                            PreparedStatement stmt = con.prepareStatement(sql);
+                            stmt.setObject(1, newValue);
+                            stmt.setObject(2, id);
+                            stmt.executeUpdate();
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+            }
+            );
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Back_To_Admin;
     private javax.swing.JTable Items_TP;
@@ -327,7 +449,6 @@ public class UI_Items extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> category;
     private javax.swing.JTextField items_name;
     private javax.swing.JDesktopPane jDesktopPane1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
@@ -336,6 +457,5 @@ public class UI_Items extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField price;
-    private javax.swing.JTextField text_id;
     // End of variables declaration//GEN-END:variables
 }
